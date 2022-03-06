@@ -1,9 +1,55 @@
+//实现下拉框
+import fonts.fontAwesome;
 import win.ui;
 /*DSG{{*/
 var SettingPage = win.form(text="aardio form";right=759;bottom=469;bgcolor=16777215)
-SettingPage.add()
+SettingPage.add(
+dropdown={cls="plus";left=12;top=10;right=165;bottom=41;bgcolor=15132390;border={color=-3546113;width=2};font=LOGFONT(h=-13);forecolor=16777215;iconStyle={align="right";font=LOGFONT(name='FontAwesome');padding={right=8}};iconText='\uF078';notify=1;paddingRight=28;textPadding={left=2;top=6;right=1;bottom=2};z=1};
+menuItem={cls="plus";text="5.2.17";left=12;top=41;right=165;bottom=86;bgcolor=11525002;border={left=1;right=1;bottom=1;color=-3546113};font=LOGFONT(h=-20;name='FontAwesome');tabstop=1;z=2};
+menuItem2={cls="plus";text="5.6.9";left=12;top=86;right=165;bottom=131;bgcolor=11525002;border={left=1;right=1;bottom=1;color=-3546113};font=LOGFONT(h=-20;name='FontAwesome');ont=LOGFONT(name='FontAwesome';charset=0);tabstop=1;z=3};
+menuItem3={cls="plus";text="7.3.9";left=12;top=131;right=165;bottom=176;bgcolor=11525002;border={left=1;right=1;bottom=1;color=-3546113};font=LOGFONT(h=-20;name='FontAwesome');tabstop=1;z=4}
+)
 /*}}*/
 
-SettingPage.show();
+import win.ui.tabs;
+var menu = win.ui.tabs(SettingPage.menuItem,SettingPage.menuItem2,SettingPage.menuItem3)
+menu.skin( { 
+	foreground={
+		default = 0xFFFFFFFF;
+		hover= 0xFF8ADBAF;
+	};
+	checked = { 
+		foreground={
+			default = 0xFFDB8A8E;
+			hover= 0xFF8ADBAF;
+		}; 
+	}
+})
+
+// 用户点选菜单项触发此事件,strip参数是点选的控件
+menu.onOk = function(strip){
+	SettingPage.dropdown.setFocus(menu.selText)
+}
+
+// 切换到弹出列表模式,并使用参数指定的控件处理键盘事件
+menu.initPopup(SettingPage.dropdown.editBox)
+
+// 禁止共享编辑框外观状态(focus状态除外)
+SettingPage.dropdown.editState = false
+SettingPage.dropdown.skin({
+	background = { hover = 0xFFF78987 }
+	checked = { 
+		iconText = '\uF077';
+	}  
+})
+
+// 显示弹出菜单，弹出菜单会自动修改winform.dropdown的checked属性为菜单打开状态
+SettingPage.dropdown.oncommand = function(id,event){ 
+	if(SettingPage.dropdown.checked ){
+		menu.selText = SettingPage.dropdown.text
+		menu.popup(true,SettingPage.dropdown)
+	}  
+}
+
+SettingPage.show() 
 win.loopMessage();
-return SettingPage;
